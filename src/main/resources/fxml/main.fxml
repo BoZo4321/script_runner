@@ -14,7 +14,7 @@
         <ToolBar>
             <Button text="Run" onAction="#onRun"/>
             <Label text="Status:"/>
-            <Label fx:id="statusLabel" text="IDLE"/>
+            <Label fx:id="statusLabel" text="Wating for user to click"/>
         </ToolBar>
     </top>
 
