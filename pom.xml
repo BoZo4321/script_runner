@@ -12,7 +12,7 @@
         <java.version>17</java.version>
         <javafx.version>17.0.10</javafx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <richtextfx.version>0.11.0</richtextfx.version>
+        <richtextfx.version>0.11.2</richtextfx.version>
     </properties>
 
 
