@@ -12,9 +12,12 @@
 
     <top>
         <ToolBar>
-            <Button text="Run" onAction="#onRun"/>
+            <Button fx:id="runButton" text="Run" onAction="#onRun" />
+
+            <Button fx:id="testButton" text="tRun" onAction="#testRun" />
+
             <Label text="Status:"/>
-            <Label fx:id="statusLabel" text="Wating for user to click"/>
+            <Label fx:id="statusLabel" text="Default text (label in MainController is having a problem)" />
         </ToolBar>
     </top>
 

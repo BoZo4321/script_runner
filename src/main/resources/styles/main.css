@@ -1,0 +1,16 @@
+.status-waiting {
+    -fx-text-fill: gray;
+}
+
+.status-running {
+    -fx-text-fill: blue;
+}
+
+.status-success {
+    -fx-text-fill: green;
+}
+
+.status-error {
+    -fx-text-fill: red;
+}
+

@@ -14,8 +14,12 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/fxml/main.fxml")
         );
+        Scene scene = new Scene(loader.load(), 900, 600);
+
+        scene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
+
         stage.setTitle("Script Runner");
-        stage.setScene(new Scene(loader.load(), 900, 600));
+        stage.setScene(scene);
         stage.show();
     }
     public static void main(String[] args) {
