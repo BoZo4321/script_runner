@@ -224,51 +224,13 @@ public class MainController {
             default -> outputArea.setStyle(start, end, Collections.singleton("-fx-fill: black;"));
         }
 
-        if (type.equals("error")) {
-            Matcher matcher = Pattern.compile(".*:(\\d+):(\\d+):.*").matcher(text);
-            if (matcher.find()) {
-                int line = Integer.parseInt(matcher.group(1));
-                int col  = Integer.parseInt(matcher.group(2));
-
-                ErrorLocation loc = new ErrorLocation();
-                loc.lineNumber = line;
-                loc.colNumber  = col;
-                loc.startOffset = start;
-                loc.endOffset   = end;
-                errorLocations.add(loc);
-            }
-        }
         outputArea.moveTo(outputArea.getLength());
         outputArea.requestFollowCaret();
     }
 
     private void appendErrorLine(String line) {
-        int start = outputArea.getLength();
         outputArea.appendText(line + "\n");
-        int end = outputArea.getLength();
-
-        Pattern p = Pattern.compile("ERROR: .*:(\\d+):(\\d+): error:.*");
-        Matcher m = p.matcher(line);
-        if (m.matches()) {
-            int lineNumber = Integer.parseInt(m.group(1));
-            int column = Integer.parseInt(m.group(2));
-
-            /// KEYWORDS LOGIC
-//            outputArea.setStyle(start, end, Collections.singleton("-fx-fill: red; -fx-underline: true;"));
-
-
-            ErrorLocation loc = new ErrorLocation();
-            loc.lineNumber = lineNumber;
-            loc.colNumber = column;
-            loc.startOffset = start;
-            loc.endOffset = end;
-            errorLocations.add(loc);
-        } else {
-
-            /// KEYWORDS LOGIC
-//            outputArea.setStyle(start, end, Collections.singleton("-fx-fill: black;"));
-        }
-
+        highlightErrors(outputArea.getText());
     }
 
     /// KEYWORDS LOGIC
@@ -305,6 +267,30 @@ public class MainController {
                         "keyword"
                 );
             }
+        }
+    }
+
+    private void highlightErrors(String text) {
+        outputArea.clearStyle(0, text.length());
+        Pattern ERROR_PATTERN = Pattern.compile( ":(\\d+):(\\d+):");
+
+        Matcher errorMatcher = ERROR_PATTERN.matcher(text);
+        while (errorMatcher.find()) {
+            int lineNumber = Integer.parseInt(errorMatcher.group(1));
+            int columnNumber = Integer.parseInt(errorMatcher.group(2));
+
+            ErrorLocation loc = new ErrorLocation();
+            loc.lineNumber = lineNumber;
+            loc.colNumber = columnNumber;
+            loc.startOffset = errorMatcher.start();
+            loc.endOffset = errorMatcher.end();
+            errorLocations.add(loc);
+
+            outputArea.setStyleClass(
+                    errorMatcher.start(),
+                    errorMatcher.end(),
+                    "error"
+            );
         }
     }
 }

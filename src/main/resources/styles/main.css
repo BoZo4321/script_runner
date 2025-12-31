@@ -18,3 +18,8 @@
     -fx-fill: #ff9800;
     -fx-font-weight: bold;
 }
+.error {
+    -fx-fill: #ff4d4d;
+    -fx-font-weight: bold;
+    -fx-underline: true;
+}
