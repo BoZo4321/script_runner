@@ -1,1 +1,0 @@
-C:\kotlin\kotlinc\bin\kotlinc.bat

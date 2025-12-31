@@ -10,9 +10,9 @@ The application provides a side-by-side editor and output pane, supports live ou
 - **Kotlin Interpreter** must be installed.  
 - Download Kotlin compiler from the [official release](https://github.com/JetBrains/kotlin/releases/tag/v2.3.0) (scroll to Assets and download `kotlin-compiler-2.3.0.zip`).  
 - Unzip the compiler anywhere on your system.  
-- Update the path in `config/kotlinc-path.txt` to point to your local `kotlinc.bat` file.
+- Update the path in `config/kotlin-path.txt` to point to your local `kotlin.bat` file.
 
-Example is in `kotlinc-path.txt` content `C:\kotlin\kotlinc\bin\kotlinc.bat` :
+Example is in `kotlin-path.txt` content `C:\kotlin\kotlinc\bin\kotlin.bat` :
 
 ---
 

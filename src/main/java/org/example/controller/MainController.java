@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class MainController {
     /// KEYWORDS LOGIC
-//    private Set<String> keywords;
+    private Set<String> keywords;
     private final List<ErrorLocation> errorLocations = new ArrayList<>();
 
     private static class ErrorLocation {
@@ -86,7 +86,7 @@ public class MainController {
 
         try {
             Files.writeString(scriptPath, scriptArea.getText());
-            appendLine("script.kts created\n","default");
+            appendLine(scriptPath+" created\n","default");
         } catch (IOException e) {
             appendLine("Failed to write script.kts:" + e.toString(), "error"); /// OVDE IZMENA //outputArea.appendText("Failed to write script.kts:" + e.toString() + "\n");
             return;
@@ -95,11 +95,10 @@ public class MainController {
         // BACKGROUND THREAD (main THRED)
         new Thread(() -> {
             try {
-                String kotlincPath = loadKotlincPath();
+                String kotlinPath = loadKotlinPath();
 
                 ProcessBuilder pb = new ProcessBuilder(
-                        kotlincPath,
-                        "-script",
+                        kotlinPath,
                         scriptPath.toAbsolutePath().toString()
                 );
 
@@ -201,12 +200,12 @@ public class MainController {
         });
     }
 
-    private String loadKotlincPath() {
+    private String loadKotlinPath() {
         try {
-            Path path = Paths.get("config", "kotlinc-path.txt");
+            Path path = Paths.get("config", "kotlin-path.txt");
             return Files.readString(path).trim();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read kotlinc-path.txt", e);
+            throw new RuntimeException("Cannot read kotlin-path.txt", e);
         }
     }
 
@@ -243,18 +242,18 @@ public class MainController {
     }
 
     /// KEYWORDS LOGIC
-//    private Set<String> loadKeywords() {
-//        Set<String> keywords = new HashSet<>();
-//        try {
-//            Files.lines(Paths.get("config/keywords.txt"))
-//                    .map(String::trim)
-//                    .filter(s -> !s.isEmpty())
-//                    .forEach(keywords::add);
-//        } catch (IOException e) {
-//            appendLine("Failed to load keywords: " + e.getMessage(), "error");
-//        }
-//        return keywords;
-//    }
+    private Set<String> loadKeywords() {
+        Set<String> keywords = new HashSet<>();
+        try {
+            Files.lines(Paths.get("config/keywords.txt"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(keywords::add);
+        } catch (IOException e) {
+            appendLine("Failed to load keywords: " + e.getMessage(), "error");
+        }
+        return keywords;
+    }
 
     private void appendErrorLine(String line) {
         int start = outputArea.getLength();
