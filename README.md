@@ -10,9 +10,9 @@ The application provides a side-by-side editor and output pane, supports live ou
 - **Kotlin Interpreter** must be installed.  
 - Download Kotlin compiler from the [official release](https://github.com/JetBrains/kotlin/releases/tag/v2.3.0) (scroll to Assets and download `kotlin-compiler-2.3.0.zip`).  
 - Unzip the compiler anywhere on your system.  
-- Update the path in `config/kotlin-path.txt` to point to your local `kotlin.bat` file.
+- Update the path in `config/kotlin-path.txt` to point to your local `kotlinc.bat` file.
 
-Example is in `kotlin-path.txt` content `C:\kotlin\kotlinc\bin\kotlin.bat` :
+Example is in `kotlin-path.txt` content `C:\kotlin\kotlinc\bin\kotlinc.bat` :
 
 ---
 
@@ -76,6 +76,22 @@ Script contains errors. Status shows Finished with error. Output pane shows deta
 
 -Running Script:
 While the script is executing, the Run button is disabled, and the status shows Running.... Live output continues to populate as the script runs.
+
+---
+
+## Application Preview
+
+### Main Editor and Output View
+![Editor and Output](screenshots/Waiting.png)
+
+### Running Script (Live Output)
+![Running Script](screenshots/Running.png)
+
+### Error Handling & Navigation
+![Error Navigation](screenshots/ClickableError.png)
+
+### Successful Execution
+![Success Run](screenshots/Success.png)
 
 ---
 

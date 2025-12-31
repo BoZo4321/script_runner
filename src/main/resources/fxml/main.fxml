@@ -15,6 +15,7 @@
     <top>
         <ToolBar>
             <Button fx:id="runButton" text="Run" onAction="#onRun" />
+            <Button fx:id="loadButton" text="Load Script" onAction="#onLoadScript" />
             <Label text="Status:"/>
             <Label fx:id="statusLabel" text="Default text (label in MainController is having a problem)" />
         </ToolBar>

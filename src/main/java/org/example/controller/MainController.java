@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.FileChooser;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import java.io.*;
@@ -18,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainController {
-    /// KEYWORDS LOGIC
+
     private Set<String> keywords;
     private final List<ErrorLocation> errorLocations = new ArrayList<>();
 
@@ -32,16 +33,12 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        /// KEYWORDS LOGIC
         keywords = loadKeywords();
-//        System.out.println("Keywords loaded: " + keywords);
 
-        /// KEYWORDS LOGIC
         scriptArea.setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 13pt;");
         scriptArea.setWrapText(false);
         scriptArea.setParagraphGraphicFactory(LineNumberFactory.get(scriptArea));
 
-        /// KEYWORDS LOGIC
         outputArea.setStyle("-fx-font-family: 'Consolas'; -fx-font-size: 13pt;");
         outputArea.setWrapText(true);
         outputArea.setEditable(false);
@@ -57,8 +54,6 @@ public class MainController {
                 }
             }
         });
-
-
         setStatus(ScriptStatus.WAITING);
     }
 
@@ -75,9 +70,33 @@ public class MainController {
     private Label statusLabel;
 
     @FXML
+    private Button loadButton;
+
+    @FXML
+    private void onLoadScript() {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Kotlin Script", "*.kts")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(scriptArea.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                String content = Files.readString(selectedFile.toPath());
+                scriptArea.replaceText(content);
+            } catch (IOException e) {
+                appendLine("Failed to load script: " + e.getMessage(), "error");
+            }
+        }
+    }
+
+    @FXML
     private void onRun() {
 
+        errorLocations.clear();
         outputArea.clear();
+
         setStatus(ScriptStatus.RUNNING);
 
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yy_MM_dd_HH_mm_ss");
@@ -100,6 +119,7 @@ public class MainController {
 
                 ProcessBuilder pb = new ProcessBuilder(
                         kotlinPath,
+                        "-script",
                         scriptPath.toAbsolutePath().toString()
                 );
 
@@ -178,24 +198,28 @@ public class MainController {
                     statusLabel.setText("Waiting for user action");
                     statusLabel.getStyleClass().add("status-waiting");
                     runButton.setDisable(false);
+                    loadButton.setDisable(false);
                     break;
 
                 case RUNNING:
                     statusLabel.setText("Running...");
                     statusLabel.getStyleClass().add("status-running");
                     runButton.setDisable(true);
+                    loadButton.setDisable(true);
                     break;
 
                 case SUCCESS:
                     statusLabel.setText("Finished successfully");
                     statusLabel.getStyleClass().add("status-success");
                     runButton.setDisable(false);
+                    loadButton.setDisable(false);
                     break;
 
                 case ERROR:
                     statusLabel.setText("Finished with error");
                     statusLabel.getStyleClass().add("status-error");
                     runButton.setDisable(false);
+                    loadButton.setDisable(false);
                     break;
             }
         });
@@ -210,14 +234,12 @@ public class MainController {
         }
     }
 
-
     private void appendLine(String text, String type) {
         int start = outputArea.getLength();
-        //Platform.runLater(() -> outputArea.appendText(text + "\n"));
+
         outputArea.appendText(text + "\n");
         int end = outputArea.getLength();
 
-        /// KEYWORDS LOGIC
         switch (type) {
             case "error" -> outputArea.setStyle(start, end, Collections.singleton("-fx-fill: red; -fx-font-weight: bold;"));
             case "success" -> outputArea.setStyle(start, end, Collections.singleton("-fx-fill: green;"));
@@ -233,7 +255,6 @@ public class MainController {
         highlightErrors(outputArea.getText());
     }
 
-    /// KEYWORDS LOGIC
     private Set<String> loadKeywords() {
         Set<String> keywords = new HashSet<>();
         try {
@@ -271,6 +292,9 @@ public class MainController {
     }
 
     private void highlightErrors(String text) {
+
+        errorLocations.clear();
+
         outputArea.clearStyle(0, text.length());
         Pattern ERROR_PATTERN = Pattern.compile( ":(\\d+):(\\d+):");
 
@@ -294,7 +318,3 @@ public class MainController {
         }
     }
 }
-
-
-
-

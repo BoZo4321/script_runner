@@ -1,1 +1,1 @@
-C:\kotlin\kotlinc\bin\kotlin.bat
+C:\kotlin\kotlinc\bin\kotlinc.bat
