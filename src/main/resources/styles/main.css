@@ -13,3 +13,8 @@
 .status-error {
     -fx-text-fill: red;
 }
+
+.keyword {
+    -fx-fill: #ff9800;
+    -fx-font-weight: bold;
+}

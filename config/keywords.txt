@@ -8,3 +8,6 @@ while
 return
 class
 object
+println
+Thread
+sleep

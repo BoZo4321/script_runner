@@ -33,7 +33,7 @@ public class MainController {
     @FXML
     public void initialize() {
         /// KEYWORDS LOGIC
-//        keywords = loadKeywords();
+        keywords = loadKeywords();
 //        System.out.println("Keywords loaded: " + keywords);
 
         /// KEYWORDS LOGIC
@@ -46,6 +46,7 @@ public class MainController {
         outputArea.setWrapText(true);
         outputArea.setEditable(false);
 
+        setupHighlighting();
         outputArea.setOnMouseClicked(e -> {
             int caret = outputArea.getCaretPosition();
             for (ErrorLocation loc : errorLocations) {
@@ -241,20 +242,6 @@ public class MainController {
         outputArea.requestFollowCaret();
     }
 
-    /// KEYWORDS LOGIC
-    private Set<String> loadKeywords() {
-        Set<String> keywords = new HashSet<>();
-        try {
-            Files.lines(Paths.get("config/keywords.txt"))
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .forEach(keywords::add);
-        } catch (IOException e) {
-            appendLine("Failed to load keywords: " + e.getMessage(), "error");
-        }
-        return keywords;
-    }
-
     private void appendErrorLine(String line) {
         int start = outputArea.getLength();
         outputArea.appendText(line + "\n");
@@ -282,6 +269,43 @@ public class MainController {
 //            outputArea.setStyle(start, end, Collections.singleton("-fx-fill: black;"));
         }
 
+    }
+
+    /// KEYWORDS LOGIC
+    private Set<String> loadKeywords() {
+        Set<String> keywords = new HashSet<>();
+        try {
+            Files.lines(Paths.get("config/keywords.txt"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(keywords::add);
+        } catch (IOException e) {
+            appendLine("Failed to load keywords: " + e.getMessage(), "error");
+        }
+        return keywords;
+    }
+
+    private void setupHighlighting() {
+        scriptArea.textProperty().addListener((obs, oldText, newText) -> {
+            applyHighlighting(newText);
+        });
+    }
+
+    private void applyHighlighting(String text) {
+        scriptArea.clearStyle(0, text.length());
+
+        for (String keyword : keywords) {
+            Pattern pattern = Pattern.compile("\\b" + Pattern.quote(keyword) + "\\b");
+            Matcher matcher = pattern.matcher(text);
+
+            while (matcher.find()) {
+                scriptArea.setStyleClass(
+                        matcher.start(),
+                        matcher.end(),
+                        "keyword"
+                );
+            }
+        }
     }
 }
 
